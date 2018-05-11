@@ -46,9 +46,14 @@ var WebviewBus$1 = function () {
 
       // 判断当前宿主是否为 native 环境
       if (this.isNative) {
-        // 如果为 native 环境，则监听 webview.onMessage 事件
-        this.host.props.onMessage = function (e) {
+        // 如果为 native 环境，则代理 _onMessage 事件处理方法
+        this.host._onMessage = function (e) {
+          // 处理事件消息
           _this.proccessMessage(e.nativeEvent.data);
+          // 处理 props 绑定的消息
+          var onMessage = _this.host.props.onMessage;
+
+          onMessage && onMessage(e);
         };
       } else {
         // 如果为 web 环境，则监听 document.onmessage 事件
@@ -121,7 +126,7 @@ var WebviewBus$1 = function () {
         // 类型转换
         var msg = JSON.parse(message);
         // 触发事件
-        bus.emmit(msg.event, msg.data);
+        this.bus.emit(msg.event, msg.data);
       } catch (err) {
         console.error(err);
       }
