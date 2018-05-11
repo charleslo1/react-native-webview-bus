@@ -1,6 +1,6 @@
 {
   "name": "rn-webview-bus",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "a priv check sdk",
   "main": "dist/rn-webview-bus.js",
   "scripts": {

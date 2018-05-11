@@ -8,6 +8,13 @@ npm install rn-webview-bus --save
 
 ```
 
+# Api
+* WebviewBus：WebviewBus 类，var webviewBus = new WebviewBus(window or webview)
+* webviewBus.on(event, handler)：添加跨端的事件监听器，如 web 端调用则监听 native 端发送的事件，反之亦然
+* webviewBus.once(event, handler)：添加跨端的单次事件监听器，同 webviewBus.on
+* webviewBus.off(event, handler)：取消跨端的事件监听器
+* webviewBus.emit(event, data)：触发跨端事件，如 web 端调用则 native 触发对应事件
+
 # Usage
 
 ## React Native 端组件
