@@ -1,7 +1,7 @@
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('babel-runtime/core-js/json/stringify'), require('babel-runtime/helpers/classCallCheck'), require('babel-runtime/helpers/createClass'), require('mitt')) :
 	typeof define === 'function' && define.amd ? define(['babel-runtime/core-js/json/stringify', 'babel-runtime/helpers/classCallCheck', 'babel-runtime/helpers/createClass', 'mitt'], factory) :
-	(global.priv = factory(global._JSON$stringify,global._classCallCheck,global._createClass,global.mitt));
+	(global.webviewBus = factory(global._JSON$stringify,global._classCallCheck,global._createClass,global.mitt));
 }(this, (function (_JSON$stringify,_classCallCheck,_createClass,mitt) { 'use strict';
 
 _JSON$stringify = _JSON$stringify && _JSON$stringify.hasOwnProperty('default') ? _JSON$stringify['default'] : _JSON$stringify;
@@ -84,13 +84,13 @@ var WebviewBus$1 = function () {
   }, {
     key: 'once',
     value: function once(event, handler) {
-      var _arguments = arguments,
-          _this2 = this;
+      var _this2 = this;
 
-      this.bus.on(event, function () {
-        handler && handler.apply(undefined, _arguments);
-        _this2.bus.off(event, handler);
-      });
+      var callback = function callback(evt, data) {
+        handler && handler(evt, data);
+        _this2.bus.off(event, callback);
+      };
+      this.bus.on(event, callback);
     }
 
     /**

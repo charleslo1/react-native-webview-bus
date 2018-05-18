@@ -6,7 +6,7 @@ var baseConfig = {
   input: 'index.js',
   output: {
     file: 'dist/rn-webview-bus.js',
-    name: 'priv',
+    name: 'webviewBus',
     format: 'umd',
     sourcemap: true
   },

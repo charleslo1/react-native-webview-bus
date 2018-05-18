@@ -1,7 +1,7 @@
 {
   "name": "rn-webview-bus",
-  "version": "1.0.3",
-  "description": "a priv check sdk",
+  "version": "1.0.5",
+  "description": "让 React Native 与 webview 页面互通的 Event bus，帮助快速实现 Hybrid 应用",
   "main": "dist/rn-webview-bus.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -43,5 +43,12 @@
     "rollup-plugin-babel": "^3.0.4",
     "rollup-plugin-commonjs": "^8.2.1",
     "rollup-plugin-node-resolve": "^3.0.0"
-  }
+  },
+  "files": [
+    "dist",
+    "src",
+    "index.js",
+    "LICENSE",
+    "README.md"
+  ]
 }

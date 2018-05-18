@@ -57,10 +57,11 @@ class WebviewBus {
    * @param  {Function} handler 事件处理器
    */
   once (event, handler) {
-    this.bus.on(event, () => {
-      handler && handler(...arguments)
-      this.bus.off(event, handler)
-    })
+    let callback = (evt, data) => {
+      handler && handler(evt, data)
+      this.bus.off(event, callback)
+    }
+    this.bus.on(event, callback)
   }
 
   /**
