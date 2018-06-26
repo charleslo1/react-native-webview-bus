@@ -77,7 +77,7 @@ class WebviewBus {
       })
       this.host.postMessage(msg, '*')
     } catch (err) {
-      console.error(err)
+      console.log(err)
     }
   }
 
@@ -93,7 +93,7 @@ class WebviewBus {
       // 触发事件
       this.bus.emit(msg.event, msg.data)
     } catch (err) {
-      console.error(err)
+      console.log(err)
     }
   }
 }

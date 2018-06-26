@@ -109,7 +109,7 @@ var WebviewBus$1 = function () {
         });
         this.host.postMessage(msg, '*');
       } catch (err) {
-        console.error(err);
+        console.log(err);
       }
     }
 
@@ -128,7 +128,7 @@ var WebviewBus$1 = function () {
         // 触发事件
         this.bus.emit(msg.event, msg.data);
       } catch (err) {
-        console.error(err);
+        console.log(err);
       }
     }
   }]);
