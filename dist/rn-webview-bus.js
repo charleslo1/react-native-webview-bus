@@ -47,7 +47,7 @@ var WebviewBus$1 = function () {
       // 判断当前宿主是否为 native 环境
       if (this.isNative) {
         // 如果为 native 环境，则代理 _onMessage 事件处理方法
-        this.host._onMessage = function (e) {
+        this.host.onMessage = this.host._onMessage = function (e) {
           // 处理事件消息
           _this.proccessMessage(e.nativeEvent.data);
           // 处理 props 绑定的消息

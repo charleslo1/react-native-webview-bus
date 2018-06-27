@@ -1,6 +1,6 @@
 {
   "name": "rn-webview-bus",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "让 React Native 与 webview 页面互通的 Event bus，帮助快速实现 Hybrid 应用",
   "main": "dist/rn-webview-bus.js",
   "scripts": {
