@@ -58,7 +58,7 @@ var WebviewBus$1 = function () {
       } else {
         // 如果为 web 环境，则监听 document.onmessage 事件
         document.addEventListener('message', function (e) {
-          this.proccessMessage(e.data);
+          _this.proccessMessage(e.data);
         });
       }
     }

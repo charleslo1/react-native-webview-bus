@@ -36,7 +36,7 @@ class WebviewBus {
       }
     } else {
       // 如果为 web 环境，则监听 document.onmessage 事件
-      document.addEventListener('message', function (e) {
+      document.addEventListener('message', (e) => {
         this.proccessMessage(e.data)
       })
     }
