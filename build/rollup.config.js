@@ -5,7 +5,7 @@ var babel = require('rollup-plugin-babel')
 var baseConfig = {
   input: 'index.js',
   output: {
-    file: 'dist/rn-webview-bus.js',
+    file: 'dist/react-native-webview-bus.js',
     name: 'webviewBus',
     format: 'umd',
     sourcemap: true

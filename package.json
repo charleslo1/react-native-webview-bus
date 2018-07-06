@@ -1,15 +1,15 @@
 {
-  "name": "rn-webview-bus",
-  "version": "1.0.8",
+  "name": "react-native-webview-bus",
+  "version": "2.0.0",
   "description": "让 React Native 与 webview 页面互通的 Event bus，帮助快速实现 Hybrid 应用",
-  "main": "dist/rn-webview-bus.js",
+  "main": "dist/react-native-webview-bus.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "gulp lint"
   },
   "repository": {
     "type": "git",
-    "url": "http://git.keketour.com:3000/FE-Services/rn-webview-bus.git"
+    "url": "http://git.keketour.com:3000/FE-Services/react-native-webview-bus.git"
   },
   "keywords": [
     "wxapp",

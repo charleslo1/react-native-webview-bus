@@ -139,4 +139,4 @@ var WebviewBus$1 = function () {
 return WebviewBus$1;
 
 })));
-//# sourceMappingURL=rn-webview-bus.js.map
+//# sourceMappingURL=react-native-webview-bus.js.map

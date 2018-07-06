@@ -1,10 +1,10 @@
-# rn-webview-bus
+# react-native-webview-bus
 > 让 React Native 与 webview 页面互通的 Event bus，帮助快速实现 Hybrid 应用
 
 # Install
 
 ``` sh
-npm install rn-webview-bus --save
+npm install react-native-webview-bus --save
 
 ```
 
@@ -25,7 +25,7 @@ import React, { Component } from 'react'
 import { View, Text, WebView } from 'react-native'
 import styles from './styles'
 import * as WeChat from 'react-native-wechat';
-import WebviewBus from 'rn-webview-bus'
+import WebviewBus from 'react-native-webview-bus'
 
 type Props = {}
 export default class Page extends Component<Props> {
@@ -139,7 +139,7 @@ try {
 </template>
 
 <script>
-import WebviewBus from 'rn-webview-bus'
+import WebviewBus from 'react-native-webview-bus'
 
 export default {
   data () {
