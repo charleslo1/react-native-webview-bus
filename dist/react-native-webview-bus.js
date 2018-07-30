@@ -20,15 +20,18 @@ var WebviewBus$1 = function () {
    */
   function WebviewBus() {
     var host = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : window;
+    var env = arguments[1];
 
     _classCallCheck(this, WebviewBus);
 
     // 宿主（window 或 webview 实例）
     this.host = host;
-    // 是否为 native 环境
-    this.isNative = !!this.host.injectJavaScript;
+    // 环境
+    this.env = env === 'native' || !!this.host.injectJavaScript ? 'native' : 'web';
     // 事件总线
     this.bus = mitt();
+
+    this.messageCache = {};
 
     // 初始化绑定相关事件
     this._bindEvents();
@@ -45,7 +48,7 @@ var WebviewBus$1 = function () {
       var _this = this;
 
       // 判断当前宿主是否为 native 环境
-      if (this.isNative) {
+      if (this.env === 'native') {
         // 如果为 native 环境，则代理 _onMessage 事件处理方法
         this.host.onMessage = this.host._onMessage = function (e) {
           // 处理事件消息
@@ -105,9 +108,28 @@ var WebviewBus$1 = function () {
       try {
         var msg = _JSON$stringify({
           event: event,
-          data: data
+          data: data,
+          _env: this.env
         });
-        this.host.postMessage(msg, '*');
+
+        var chunkSize = 5000;
+        var page = Math.ceil(msg.length / chunkSize);
+        if (page < 1) {
+          // 单次发送
+          this.host.postMessage(msg, '*');
+        } else {
+          // 分批次发送
+          var id = Math.random().toString(32).replace('0.', '');
+          for (var i = 0; i < page; i++) {
+            this.host.postMessage(_JSON$stringify({
+              id: id,
+              event: event,
+              chunk: msg.substr(i * chunkSize, chunkSize),
+              end: i + 1 === page,
+              _env: this.env
+            }), '*');
+          }
+        }
       } catch (err) {
         console.log(err);
       }
@@ -123,10 +145,29 @@ var WebviewBus$1 = function () {
     value: function proccessMessage(message) {
       if (!message) return;
       try {
-        // 类型转换
+        // 转换消息内容
         var msg = JSON.parse(message);
-        // 触发事件
-        this.bus.emit(msg.event, msg.data);
+        // 排除非正常的 message
+        if (!msg._env || msg._env === this.env) return;
+
+        // 判断是否为分批消息
+        if (msg.chunk) {
+          // 保存到消息缓存
+          this.messageCache[msg.id] = this.messageCache[msg.id] || '';
+          this.messageCache[msg.id] += msg.chunk;
+          // 判断是否未结束
+          if (msg.end) {
+            // 转换完整消息内容
+            var msgBody = JSON.parse(this.messageCache[msg.id]);
+            // 触发事件
+            this.bus.emit(msgBody.event, msgBody.data);
+            // 清理缓存
+            delete this.messageCache[msg.id];
+          }
+        } else {
+          // 触发事件
+          this.bus.emit(msg.event, msg.data);
+        }
       } catch (err) {
         console.log(err);
       }

@@ -8,13 +8,15 @@ class WebviewBus {
    * 构造函数
    * @param  {Object} host 宿主（window 或 webview 实例）
    */
-  constructor (host = window) {
+  constructor (host = window, env) {
     // 宿主（window 或 webview 实例）
     this.host = host
-    // 是否为 native 环境
-    this.isNative = !!this.host.injectJavaScript
+    // 环境
+    this.env = (env === 'native' || !!this.host.injectJavaScript) ? 'native' : 'web'
     // 事件总线
     this.bus = mitt()
+
+    this.messageCache = {}
 
     // 初始化绑定相关事件
     this._bindEvents()
@@ -25,7 +27,7 @@ class WebviewBus {
    */
   _bindEvents () {
     // 判断当前宿主是否为 native 环境
-    if (this.isNative) {
+    if (this.env === 'native') {
       // 如果为 native 环境，则代理 _onMessage 事件处理方法
       this.host.onMessage = this.host._onMessage = (e) => {
         // 处理事件消息
@@ -73,9 +75,28 @@ class WebviewBus {
     try {
       let msg = JSON.stringify({
         event: event,
-        data: data
+        data: data,
+        _env: this.env
       })
-      this.host.postMessage(msg, '*')
+
+      let chunkSize = 5000
+      let page = Math.ceil(msg.length / chunkSize)
+      if (page < 1) {
+        // 单次发送
+        this.host.postMessage(msg, '*')
+      } else {
+        // 分批次发送
+        let id = Math.random().toString(32).replace('0.', '')
+        for (let i = 0; i < page; i++) {
+          this.host.postMessage(JSON.stringify({
+            id: id,
+            event: event,
+            chunk: msg.substr(i * chunkSize, chunkSize),
+            end: (i + 1) === page,
+            _env: this.env
+          }), '*')
+        }
+      }
     } catch (err) {
       console.log(err)
     }
@@ -88,10 +109,29 @@ class WebviewBus {
   proccessMessage (message) {
     if (!message) return
     try {
-      // 类型转换
+      // 转换消息内容
       let msg = JSON.parse(message)
-      // 触发事件
-      this.bus.emit(msg.event, msg.data)
+      // 排除非正常的 message
+      if (!msg._env || msg._env === this.env) return
+
+      // 判断是否为分批消息
+      if (msg.chunk) {
+        // 保存到消息缓存
+        this.messageCache[msg.id] = this.messageCache[msg.id] || ''
+        this.messageCache[msg.id] += msg.chunk
+        // 判断是否未结束
+        if (msg.end) {
+          // 转换完整消息内容
+          let msgBody = JSON.parse(this.messageCache[msg.id])
+          // 触发事件
+          this.bus.emit(msgBody.event, msgBody.data)
+          // 清理缓存
+          delete this.messageCache[msg.id]
+        }
+      } else {
+        // 触发事件
+        this.bus.emit(msg.event, msg.data)
+      }
     } catch (err) {
       console.log(err)
     }
