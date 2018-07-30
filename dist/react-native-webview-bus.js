@@ -114,7 +114,7 @@ var WebviewBus$1 = function () {
 
         var chunkSize = 5000;
         var page = Math.ceil(msg.length / chunkSize);
-        if (page < 1) {
+        if (page <= 1) {
           // 单次发送
           this.host.postMessage(msg, '*');
         } else {

@@ -81,7 +81,7 @@ class WebviewBus {
 
       let chunkSize = 5000
       let page = Math.ceil(msg.length / chunkSize)
-      if (page < 1) {
+      if (page <= 1) {
         // 单次发送
         this.host.postMessage(msg, '*')
       } else {
